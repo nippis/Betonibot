@@ -4,16 +4,11 @@ from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from random import randint
 from telegram.ext import MessageFilter
+from time import sleep
 
 class FilterHashtag(MessageFilter):
     def filter(self, message):
         return message.text.startswith("#protip")
-
-def hello(update: Update, context: CallbackContext):
-    update.message.reply_text(f"Hello {update.effective_user.first_name}")
-    
-def start(update: Update, context: CallbackContext):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
     
 def protip(update: Update, context:CallbackContext):
     file = open("protips.txt", "r")
@@ -23,6 +18,7 @@ def protip(update: Update, context:CallbackContext):
     if len(protips) > 0:
         context.bot.send_message(chat_id=update.effective_chat.id, text=protips[randint(0,len(protips)-1)])
     file.close()
+    sleep(3)
     
 def protipAdd(update: Update, context: CallbackContext):
     print("Adding protip")
@@ -48,13 +44,9 @@ def main():
     filter_hashtag = FilterHashtag()
     
     updater = Updater(tg_token)
-    updater.dispatcher.add_handler(CommandHandler("hello", hello))
-    
-    start_handler = CommandHandler('start', start)
-    updater.dispatcher.add_handler(start_handler)
-    
-    protip_handler = CommandHandler('protip', protip)
-    updater.dispatcher.add_handler(protip_handler)
+
+    protipHandler = CommandHandler('protip', protip)
+    updater.dispatcher.add_handler(protipHandler)
     
     protipAddHandler = MessageHandler(Filters.text & filter_hashtag, protipAdd)
     updater.dispatcher.add_handler(protipAddHandler)
