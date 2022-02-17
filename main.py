@@ -7,7 +7,7 @@ from telegram.ext import MessageFilter
 
 class FilterHashtag(MessageFilter):
     def filter(self, message):
-        return message.text.startswith("#iprotip")
+        return message.text.startswith("#protip")
 
 def hello(update: Update, context: CallbackContext):
     update.message.reply_text(f"Hello {update.effective_user.first_name}")
@@ -29,12 +29,15 @@ def protipAdd(update: Update, context: CallbackContext):
     file = open("protips.txt", "a")
     text = update.message.text
     text = text.replace("#protip", "")
+    text = text.replace("\n", "")
     text = text.strip()
     if not text.endswith("."):
         text = text + "."
     if not text[0].isupper():
         text = text.capitalize()
     text = text+"\n"
+    if len(text) < 3:
+        return
     file.write(text)
     file.close()
     print("Protip added")
