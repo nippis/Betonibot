@@ -18,7 +18,7 @@ def protip(update: Update, context:CallbackContext):
     if len(protips) > 0:
         context.bot.send_message(chat_id=update.effective_chat.id, text=protips[randint(0,len(protips)-1)])
     file.close()
-    sleep(3)
+    sleep(4)
     
 def protipAdd(update: Update, context: CallbackContext):
     print("Adding protip")
@@ -37,6 +37,9 @@ def protipAdd(update: Update, context: CallbackContext):
     file.write(text)
     file.close()
     print("Protip added")
+    text = text.replace("\n", "")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=f'Protip "{text}" lisätty listalle.')
+    sleep(4)
         
 def main():
     print("Main function started")
