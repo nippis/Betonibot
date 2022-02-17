@@ -41,11 +41,7 @@ def protipAdd(update: Update, context: CallbackContext):
     file.write(text)
     file.close()
     print("Protip added")
-    
-def printMessage(update: Update, context: CallbackContext):
-    text = update.message.text
-    print(text)
-    
+        
 def main():
     print("Main function started")
     # Remember to initialize the class.
@@ -63,9 +59,6 @@ def main():
     protipAddHandler = MessageHandler(Filters.text & filter_hashtag, protipAdd)
     updater.dispatcher.add_handler(protipAddHandler)
     
-    genMessageHandler = MessageHandler(Filters.text, printMessage)
-    updater.dispatcher.add_handler(genMessageHandler)
-
     updater.start_polling()
     updater.idle()
 
