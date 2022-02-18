@@ -3,12 +3,10 @@ from env import tg_token
 from telegram import Update
 from telegram.ext import Updater, CommandHandler, CallbackContext, MessageHandler, Filters
 from random import randint
-from telegram.ext import MessageFilter
 from time import sleep
 
-class FilterHashtag(MessageFilter):
-    def filter(self, message):
-        return message.text.startswith("#protip")
+from filters import FilterHashtag, FilterCalculation
+from calculator import calculator
     
 def protip(update: Update, context:CallbackContext):
     file = open("protips.txt", "r")
@@ -44,12 +42,19 @@ def protipAdd(update: Update, context: CallbackContext):
     text = text.replace("\n", "")
     context.bot.send_message(chat_id=update.effective_chat.id, text=f'Protip "{text}" lisätty listalle.')
     sleep(4)
+
+def calculate(update: Update, context: CallbackContext):
+    calcInput = update.message.text
+    result = calculator(calcInput)
+    print(result)
+    sleep(4)
         
 def main():
     print("Main function started")
     # Remember to initialize the class.
     filter_hashtag = FilterHashtag()
-    
+    filter_calc = FilterCalculation()
+
     updater = Updater(tg_token)
 
     protipHandler = CommandHandler('protip', protip)
@@ -57,6 +62,9 @@ def main():
     
     protipAddHandler = MessageHandler(Filters.text & filter_hashtag, protipAdd)
     updater.dispatcher.add_handler(protipAddHandler)
+
+    calcHandler = MessageHandler(Filters.text & filter_calc, calculate)
+    updater.dispatcher.add_handler(calcHandler)
     
     updater.start_polling(drop_pending_updates=True, bootstrap_retries=0)
 
