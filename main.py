@@ -16,7 +16,11 @@ def protip(update: Update, context:CallbackContext):
     for line in file:
         protips.append(line)
     if len(protips) > 0:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=protips[randint(0,len(protips)-1)])
+        message = protips[randint(0,len(protips)-1)]
+        message = message.replace("\n", "")
+        print("Message size is:", len(message.encode('utf-8')))
+        context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+        print("Message sent:", message)
     file.close()
     sleep(4)
     
@@ -55,6 +59,5 @@ def main():
     updater.dispatcher.add_handler(protipAddHandler)
     
     updater.start_polling()
-    updater.idle()
 
 main()
