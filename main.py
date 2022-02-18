@@ -47,6 +47,7 @@ def calculate(update: Update, context: CallbackContext):
     calcInput = update.message.text
     result = calculator(calcInput)
     print(result)
+    context.bot.send_message(chat_id=update.effective_chat.id, text=result)
     sleep(4)
         
 def main():
