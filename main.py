@@ -7,6 +7,8 @@ from time import sleep
 
 from filters import FilterHashtag, FilterCalculation
 from calculator import calculator
+
+messageQueue = []
     
 def protip(update: Update, context:CallbackContext):
     try:
@@ -18,12 +20,11 @@ def protip(update: Update, context:CallbackContext):
             message = protips[randint(0,len(protips)-1)]
             message = message.replace("\n", "")
             print("Message size is:", len(message.encode('utf-8')))
-            context.bot.send_message(chat_id=update.effective_chat.id, text=message)
+            messageQueue.append((context, update.effective_chat.id, message))
             print("Message sent:", message)
         file.close()
-        sleep(4)
     except:
-        sleep(4)
+        pass
     
 def protipAdd(update: Update, context: CallbackContext):
     try:
@@ -44,21 +45,20 @@ def protipAdd(update: Update, context: CallbackContext):
         file.close()
         print("Protip added")
         text = text.replace("\n", "")
-        context.bot.send_message(chat_id=update.effective_chat.id, text=f'Protip "{text}" lisätty listalle.')
-        sleep(4)
+        messageQueue.append((context, update.effective_chat.id, f'Protip "{text}" lisätty listalle.'))
     except:
-        sleep(4)
+        pass
 
 def calculate(update: Update, context: CallbackContext):
     try:
         calcInput = update.message.text
         result = str(calculator(calcInput))
         print(result)
+        print("Pituus:", len(str(result)))
         if len(str(result)) > 0:
-            context.bot.send_message(chat_id=update.effective_chat.id, text=result)
-        sleep(4)
+            messageQueue.append((context, update.effective_chat.id, result))
     except:
-        sleep(4)
+        pass
         
 def main():
     print("Main function started")
@@ -82,5 +82,12 @@ def main():
     updater.dispatcher.add_handler(calcHandler)
     
     updater.start_polling(drop_pending_updates=True, bootstrap_retries=0)
+
+    while True:
+        if len(messageQueue) > 0:
+            message = messageQueue.pop(0)
+            message[0].bot.send_message(message[1], message[2])
+            sleep(9)
+        sleep(1)
 
 main()
