@@ -58,6 +58,6 @@ def main():
     protipAddHandler = MessageHandler(Filters.text & filter_hashtag, protipAdd)
     updater.dispatcher.add_handler(protipAddHandler)
     
-    updater.start_polling()
+    updater.start_polling(drop_pending_updates=True, bootstrap_retries=0)
 
 main()
