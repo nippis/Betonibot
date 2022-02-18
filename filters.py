@@ -6,8 +6,8 @@ class FilterHashtag(MessageFilter):
 
 class FilterCalculation(MessageFilter):
     def filter(self, message):
-        plus = r'=\s*[0-9]+\s*\+\s*[0-9]+'
-        minus = r'=\s*[0-9]+\s*-\s*[0-9]+'
-        mult = r'=\s*[0-9]+\s*\*\s*[0-9]+'
-        div = r'=\s*[0-9]+\s*/\s*[0-9]+'
+        plus = r'^=\s*[0-9]+\s*\+\s*[0-9]+'
+        minus = r'^=\s*[0-9]+\s*-\s*[0-9]+'
+        mult = r'^=\s*[0-9]+\s*\*\s*[0-9]+'
+        div = r'^=\s*[0-9]+\s*/\s*[0-9]+'
         return Filters.regex(plus) | Filters.regex(minus) | Filters.regex(mult) | Filters.regex(div)
